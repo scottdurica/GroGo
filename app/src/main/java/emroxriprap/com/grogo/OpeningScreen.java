@@ -3,11 +3,13 @@ package emroxriprap.com.grogo;
 import android.content.Context;
 import android.content.Intent;
 
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.content.res.Configuration;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +36,7 @@ public class OpeningScreen extends ActionBarActivity {
 private ListView drawerListView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    String[] array = new String[]{"one", "two", "three","blah", "be", "blah",
-            "one", "two", "three","blah", "be", "blah",
-            "one", "two", "three","blah", "be", "blah",
-            "one", "two", "three","blah", "be", "blah",};
+    String[] array = new String[]{"My Items", "My Meals", "My Lists",};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +54,7 @@ private ListView drawerListView;
         actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 drawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+//                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
                 R.string.open,  /* "open drawer" description */
                 R.string.close  /* "close drawer" description */
         ) {
@@ -63,11 +62,14 @@ private ListView drawerListView;
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
 //                getActionBar().setTitle("test");
+                Toast.makeText(getApplicationContext(),"closed",Toast.LENGTH_SHORT).show();
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
 //                getActionBar().setTitle("test");
+                Toast.makeText(getApplicationContext(),"opened",Toast.LENGTH_SHORT).show();
+
             }
         };
 
@@ -77,7 +79,18 @@ private ListView drawerListView;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        actionBarDrawerToggle.syncState();
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
     private void addTestData() {
         GroceryList one = new GroceryList("Sunday List",8);
         GroceryList two = new GroceryList("Football Day",18);
@@ -123,6 +136,18 @@ private ListView drawerListView;
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (item != null && item.getItemId() == android.R.id.home) {
+//            for right side drawer stuff...
+//            if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+//                drawerLayout.closeDrawer(Gravity.RIGHT);
+//            } else {
+//                drawerLayout.openDrawer(Gravity.RIGHT);
+//            }
+        }
+
+        if(actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -186,7 +211,7 @@ private ListView drawerListView;
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-//            selectItem(position);
+            selectItem(position);
         }
     }
 }

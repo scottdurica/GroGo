@@ -5,4 +5,5 @@
     android:text="This text"
     android:id="@+id/textView"
 
-    />
+    android:textColor="@color/dark_blue"
+    android:textSize="30dp" />
