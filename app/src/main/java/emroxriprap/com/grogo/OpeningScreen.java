@@ -8,16 +8,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,46 +24,46 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static emroxriprap.com.grogo.R.drawable.*;
+import emroxriprap.com.grogo.emroxriprap.com.grogo.db.DbHandler;
 
 
 public class OpeningScreen extends ActionBarActivity {
     private ListView listviewOfLists;
     private List<GroceryList> groceryList;
-    private MyCustomAdapter adapter;
-
-private ListView drawerListView;
+    private MyCustomAdapter groceryListAdapter;
+    private MyCustomAdapter drawerListAdapter;
+    private List<LeftDrawerItem>drawerList;
+    private ListView drawerListView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    String[] array = new String[]{"My Items", "My Meals", "My Lists",};
+    private LinearLayout drawerWrapperLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_screen);
-        addTestData();
+        DbHandler db = new DbHandler(this);
+//        db.deleteAllLists();
+//        addTestData();
+//        TESTpopulateShoppingListsItemsTable();
+        groceryList = new ArrayList<GroceryList>();
+        groceryList = db.getAllLists();
 
-        setupViews();
-
+        drawerWrapperLayout = (LinearLayout)findViewById(R.id.ll_drawer_wrapper_layout);
         drawerListView = (ListView)findViewById(R.id.lv_drawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        setUpDrawerList();
+        setupViews();
 
-        drawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.list_item_drawer,array));
+//      drawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.list_item_drawer,array));
         drawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                drawerLayout,         /* DrawerLayout object */
-//                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.open,  /* "open drawer" description */
-                R.string.close  /* "close drawer" description */
-        ) {
-
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+                                                    R.string.open,  R.string.close ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
 //                getActionBar().setTitle("test");
                 Toast.makeText(getApplicationContext(),"closed",Toast.LENGTH_SHORT).show();
             }
-
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
 //                getActionBar().setTitle("test");
@@ -79,35 +78,13 @@ private ListView drawerListView;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        actionBarDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        actionBarDrawerToggle.onConfigurationChanged(newConfig);
-    }
-    private void addTestData() {
-        GroceryList one = new GroceryList("Sunday List",8);
-        GroceryList two = new GroceryList("Football Day",18);
-        GroceryList three = new GroceryList("Parents Over",4);
-        GroceryList four = new GroceryList("Bi-Weekly",0);
-        groceryList = new ArrayList<GroceryList>();
-        groceryList.add(one);
-        groceryList.add(two);
-        groceryList.add(three);
-        groceryList.add(four);
-
-    }
-
     private void setupViews(){
         listviewOfLists = (ListView)findViewById(R.id.lv_saved_lists);
-        adapter = new MyCustomAdapter(this,groceryList);
-        listviewOfLists.setAdapter(adapter);
+        groceryListAdapter = new MyCustomAdapter(this,groceryList);
+        listviewOfLists.setAdapter(groceryListAdapter);
+        drawerListAdapter = new MyCustomAdapter(this,drawerList);
+        drawerListView.setAdapter(drawerListAdapter);
+
         listviewOfLists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -118,9 +95,82 @@ private ListView drawerListView;
 //                intent.putExtra("name",s.getStoreName());
 //                intent.putExtra("address", s.getStoreAddress());
 //                startActivity(intent);
+                view.setSelected(true);
+                GroceryList gl = groceryList.get(position);
+                Intent i = new Intent(OpeningScreen.this, ListScreen.class);
+                i.putExtra("id", gl.getId());
+                i.putExtra("name", gl.getName());
+                startActivity(i);
+
             }
         });
     }
+    private void setUpDrawerList() {
+        LeftDrawerItem myItems = new LeftDrawerItem("My Items","Add or edit your saved items.  You" +
+                " can mark items as favorites and add them to your lists automatically.",
+                R.drawable.full_basket_icon);
+        LeftDrawerItem myMeals = new LeftDrawerItem("My Meals", "Add or edit your saved meals. " +
+                "Adding a meal to your shopping list will automatically add all of the meal's ingredients.",
+                R.drawable.meal_icon);
+        LeftDrawerItem myLists = new LeftDrawerItem("My Lists", "Add or edit your shopping lists.  " +
+                "Lists can consist of items and meals.",
+                R.drawable.list_icon);
+        LeftDrawerItem settings = new LeftDrawerItem("Settings", "Edit application settings.",
+                R.drawable.settings_icon);
+        drawerList = new ArrayList<LeftDrawerItem>();
+        drawerList.add(myItems);
+        drawerList.add(myMeals);
+        drawerList.add(myLists);
+        drawerList.add(settings);
+
+
+    }
+
+    private void TESTpopulateShoppingListsItemsTable() {
+        DbHandler db = new DbHandler(this);
+        db.addEntryToShoppingListsItemsTable(0,2);
+        db.addEntryToShoppingListsItemsTable(1,2);
+        db.addEntryToShoppingListsItemsTable(2,2);
+        db.addEntryToShoppingListsItemsTable(3,1);
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        actionBarDrawerToggle.syncState();
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    private void addTestData() {
+        GroceryList one = new GroceryList("Sunday List",8);
+        GroceryList two = new GroceryList("Football Lunch",18);
+        GroceryList three = new GroceryList("Parents Anni",4);
+        GroceryList four = new GroceryList("Weekly",0);
+        boolean success = true;
+        DbHandler db = new DbHandler(this);
+        success = db.addGroceryList(one);
+        success = db.addGroceryList(two);
+        success = db.addGroceryList(three);
+        success = db.addGroceryList(four);
+        if (!success){
+            Toast.makeText(this, "Failed to insert into DB", Toast.LENGTH_SHORT).show();
+        }
+//        groceryList = new ArrayList<GroceryList>();
+//        groceryList.add(one);
+//        groceryList.add(two);
+//        groceryList.add(three);
+//        groceryList.add(four);
+
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -136,14 +186,14 @@ private ListView drawerListView;
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (item != null && item.getItemId() == android.R.id.home) {
+//        if (item != null && item.getItemId() == android.R.id.home) {
 //            for right side drawer stuff...
 //            if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
 //                drawerLayout.closeDrawer(Gravity.RIGHT);
 //            } else {
 //                drawerLayout.openDrawer(Gravity.RIGHT);
 //            }
-        }
+//        }
 
         if(actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -196,6 +246,20 @@ private ListView drawerListView;
                 nameView.setText(gl.getName());
                 itemCountView.setText(String.valueOf(gl.getItemCount()));
                 return convertView;
+            }else if(dataList.get(0) instanceof LeftDrawerItem){
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.list_item_left_drawer, null);
+                }
+                TextView name = (TextView)convertView.findViewById(R.id.tv_left_drawer_name);
+                TextView  desc = (TextView)convertView.findViewById(R.id.tv_left_drawer_description);
+                ImageView icon = (ImageView)convertView.findViewById(R.id.iv_left_drawer_icon);
+
+                LeftDrawerItem item = (LeftDrawerItem)dataList.get(position);
+                name.setText(item.getName());
+                desc.setText(item.getDescription());
+                icon.setImageResource(item.getIconResId());
+                return convertView;
             }
             return null;
         }
@@ -205,8 +269,10 @@ private ListView drawerListView;
 
         // Highlight the selected item, update the title, and close the drawer
         drawerListView.setItemChecked(position, true);
-        setTitle(array[position]);
-        drawerLayout.closeDrawer(drawerListView);
+        setTitle("Replace Me");
+        drawerLayout.closeDrawer(drawerWrapperLayout);
+
+
     }
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override

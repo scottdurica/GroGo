@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="120dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/iv_left_drawer_icon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="List Item Name"
+        android:id="@+id/tv_left_drawer_name"
+        android:layout_alignBottom="@+id/iv_left_drawer_icon"
+        android:layout_toRightOf="@+id/iv_left_drawer_icon"
+        android:layout_toEndOf="@+id/iv_left_drawer_icon"
+        android:layout_marginLeft="10dp"
+        android:layout_alignTop="@+id/iv_left_drawer_icon"
+        style="@style/blue_list_text"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is a description of the item.  It will tell the user stuff."
+        android:id="@+id/tv_left_drawer_description"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/tv_left_drawer_name"
+        android:layout_alignStart="@+id/tv_left_drawer_name"
+        android:layout_below="@+id/tv_left_drawer_name"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/dark_grey"/>
+</RelativeLayout>

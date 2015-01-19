@@ -9,7 +9,6 @@ public class GroceryList {
     private int id;
     private String name;
     private int itemCount;
-    private List<Item> items;
 
 
     public GroceryList() {
@@ -19,7 +18,15 @@ public class GroceryList {
     public GroceryList(String name, int itemCount) {
         this.name = name;
         this.itemCount = itemCount;
-        this.items = items;
+
+    }
+
+    public int getItemCount() {
+        return itemCount;
+    }
+
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
     }
 
     public int getId() {
@@ -38,19 +45,5 @@ public class GroceryList {
         this.name = name;
     }
 
-    public int getItemCount() {
-        return itemCount;
-    }
 
-    public void setItemCount(int itemCount) {
-        this.itemCount = itemCount;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 }
