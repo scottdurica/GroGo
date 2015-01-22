@@ -9,5 +9,8 @@
     <string name="title_activity_items_screen">ItemsScreen</string>
     <string name="title_activity_list_screen">ListScreen</string>
     <string name="delete">Delete</string>
+    <string name="title_activity_meals_screen">MealsScreen</string>
+    <string name="title_activity_lists_screen">ListsScreen</string>
+    <string name="title_activity_stores_screen">StoresScreen</string>
 
 </resources>

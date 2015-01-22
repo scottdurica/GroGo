@@ -3,4 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context="emroxriprap.com.grogo.ListScreen">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/ab_add_new_item"
+        android:title="Add Item"
+        android:icon="@drawable/ic_action_new"
+        android:orderInCategory="5"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionLayout="@layout/ab_et_layout"/>
 </menu>

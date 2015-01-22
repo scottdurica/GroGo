@@ -1,7 +1,9 @@
 package emroxriprap.com.grogo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +18,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import emroxriprap.com.grogo.emroxriprap.com.grogo.db.DbHandler;
+import emroxriprap.com.grogo.models.Item;
 
 
 public class ListScreen extends ActionBarActivity  {
@@ -33,11 +38,12 @@ public class ListScreen extends ActionBarActivity  {
     private EditText addField;
     private List<Item> itemList;
     private MyCustomAdapter adapter;
-
     private GestureDetectorCompat gestureDetector;
     View.OnTouchListener gestureListener;
-private int pressedPos = -1;
-
+    private int pressedPos = -1;
+    private LinearLayout storesView;
+    private String [] testStoreArray = new String []{"Walmart","Biwise","Buy More",
+                                       "MarketBasket","Home Depot","Rite-Aid"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +60,35 @@ private int pressedPos = -1;
 
     private void setupViews() {
         final DbHandler db = new DbHandler(ListScreen.this);
+        final List<Button>buttonList = new ArrayList<Button>();
+        storesView = (LinearLayout)findViewById(R.id.ll_hsv_store_names);
+        for (int i=0; i<testStoreArray.length; i++){
+            Button button = new Button (this);
+            button.setText(testStoreArray[i]);
+            button.setId(i);
+            button.setBackgroundColor(Color.TRANSPARENT);
+            button.setTextColor(getResources().getColor(R.color.dark_grey));
+            buttonList.add(button);
+            storesView.addView(button);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Button b = (Button)v;
+                    v.setBackgroundColor(getResources().getColor(R.color.primary_blue));
+                    b.setTextColor(Color.WHITE);
+                    for (Button button: buttonList){
+                        if (button.getId()!= v.getId()){
+                            button.setBackgroundColor(Color.TRANSPARENT);
+                            button.setTextColor(getResources().getColor(R.color.dark_grey));
+                        }
+                    }
+                    String s = (String) String.valueOf(b.getText());
+                    Log.e("VALUE PRESSED ",s);
+                }
+            });
 
-        addField = (EditText)findViewById(R.id.et_add_item);
+        }
+//        addField = (EditText)findViewById(R.id.et_add_item);
         itemList = new ArrayList<Item>();
         itemList = db.getItemsForList(listId);
         listView = (ListView)findViewById(R.id.lv_list_items);
@@ -135,6 +168,50 @@ private int pressedPos = -1;
 //    }
 //});
 
+//        addField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if(actionId == EditorInfo.IME_ACTION_DONE){
+//                    Item item = new Item(addField.getText().toString());
+//                    //make sure item doesn't already exist...
+//                    int exists = db.getIdOfItem(item);
+//                    if (exists == -1){
+//                        db.addItem(item);
+//                        Log.e("ITEM ADDED"," SERIOUSLY!!!");
+//                    }
+//                    int id = db.getIdOfItem(item);
+//                    Log.e("id of item is: ",String.valueOf(id));
+//                    /*make sure entry isn't already in DB, as this would cause duplicate item
+//                    names in the listview*/
+//                    boolean alreadyInList = db.doesEntryExistInList(id,listId);
+//                    if (!alreadyInList){
+//                        db.addEntryToShoppingListsItemsTable(id,listId);
+//                        itemList.add(item);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//
+//                    addField.setText("");
+//                }
+//                return false;
+//            }
+//        });
+
+    }
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_list_screen, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.ab_add_new_item);
+        addField = (EditText) MenuItemCompat.getActionView(menuItem);
+
+        final DbHandler db = new DbHandler(this);
+//        addField = (EditText)findViewById(R.id.ab_add_new_item);
+
         addField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -163,14 +240,7 @@ private int pressedPos = -1;
             }
         });
 
-    }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list_screen, menu);
         return true;
     }
 
@@ -184,6 +254,13 @@ private int pressedPos = -1;
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.ab_add_new_item){
+            //put et in actionbar
+
+//            addField.requestFocus();
+//            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.showSoftInput(addField, InputMethodManager.SHOW_IMPLICIT);
         }
 
         return super.onOptionsItemSelected(item);

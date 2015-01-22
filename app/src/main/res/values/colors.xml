@@ -7,11 +7,11 @@
     <color name="dark_blue">#766cff</color>
     <color name="off_white">#CBD8E0</color>
     <color name="dark_grey">#999999</color>
-    <color name="shadow">#C0CBD3</color>
+    <color name="shadow">#DDDDDD</color>
 
-    <color name="window_bg">#C0CBD3</color>
+    <color name="window_bg">#FFFFF8</color>
     <color name="text_grey">#4C5053</color>
-    <color name="list_item_bg">#E5F3FC</color>
+    <color name="list_item_bg">#f4f4f4</color>
     <color name="highlight_green">#ABFF8A</color>
     <color name="stroke_green">#7CB964</color>
 </resources>

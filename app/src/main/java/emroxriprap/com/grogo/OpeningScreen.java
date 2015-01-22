@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import emroxriprap.com.grogo.emroxriprap.com.grogo.db.DbHandler;
+import emroxriprap.com.grogo.manipulationscreens.ItemsScreenUtility;
+import emroxriprap.com.grogo.manipulationscreens.ListsScreenUtility;
+import emroxriprap.com.grogo.manipulationscreens.MealsScreenUtility;
+import emroxriprap.com.grogo.models.GroceryList;
+import emroxriprap.com.grogo.models.LeftDrawerItem;
 
 
 public class OpeningScreen extends ActionBarActivity {
@@ -52,17 +57,20 @@ public class OpeningScreen extends ActionBarActivity {
         drawerListView = (ListView)findViewById(R.id.lv_drawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         setUpDrawerList();
+        setupDrawer();
         setupViews();
+    }
 
-//      drawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.list_item_drawer,array));
+    private void setupDrawer() {
+        //      drawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.list_item_drawer,array));
         drawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                                                    R.string.open,  R.string.close ) {
+                R.string.open,  R.string.close ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
 //                getActionBar().setTitle("test");
-                Toast.makeText(getApplicationContext(),"closed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "closed", Toast.LENGTH_SHORT).show();
             }
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
@@ -78,23 +86,16 @@ public class OpeningScreen extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
+
     private void setupViews(){
         listviewOfLists = (ListView)findViewById(R.id.lv_saved_lists);
         groceryListAdapter = new MyCustomAdapter(this,groceryList);
         listviewOfLists.setAdapter(groceryListAdapter);
         drawerListAdapter = new MyCustomAdapter(this,drawerList);
         drawerListView.setAdapter(drawerListAdapter);
-
         listviewOfLists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Store s = storeList.get(position);
-//                Log.d("LOOKIE HERE", "Value is " + s.getStoreName());
-//                Intent intent = new Intent(SummaryScreen.this, ListScreen.class);
-//                intent.putExtra("id", s.getId());
-//                intent.putExtra("name",s.getStoreName());
-//                intent.putExtra("address", s.getStoreAddress());
-//                startActivity(intent);
                 view.setSelected(true);
                 GroceryList gl = groceryList.get(position);
                 Intent i = new Intent(OpeningScreen.this, ListScreen.class);
@@ -115,12 +116,15 @@ public class OpeningScreen extends ActionBarActivity {
         LeftDrawerItem myLists = new LeftDrawerItem("My Lists", "Add or edit your shopping lists.  " +
                 "Lists can consist of items and meals.",
                 R.drawable.list_icon);
+        LeftDrawerItem myStores = new LeftDrawerItem("My Stores", "Add or edit your saved stores.",
+                R.drawable.store_icon);
         LeftDrawerItem settings = new LeftDrawerItem("Settings", "Edit application settings.",
                 R.drawable.settings_icon);
         drawerList = new ArrayList<LeftDrawerItem>();
         drawerList.add(myItems);
         drawerList.add(myMeals);
         drawerList.add(myLists);
+        drawerList.add(myStores);
         drawerList.add(settings);
 
 
@@ -265,8 +269,30 @@ public class OpeningScreen extends ActionBarActivity {
         }
     }
     private void selectItem(int position) {
-        Toast.makeText(this, R.string.app_name, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, R.string.app_name, Toast.LENGTH_SHORT).show();
+        LeftDrawerItem item = drawerList.get(position);
+        Intent intent;
+        if (item.getName().equalsIgnoreCase("My Items")){
+            intent = new Intent(OpeningScreen.this,ItemsScreenUtility.class);
+            intent.putExtra("table","items");
+            startActivity(intent);
+        }else if (item.getName().equalsIgnoreCase("My Meals")){
+            intent = new Intent(OpeningScreen.this,MealsScreenUtility.class);
+            intent.putExtra("table","meals");
+            startActivity(intent);
+        }else if (item.getName().equalsIgnoreCase("My Lists")){
+            intent = new Intent(OpeningScreen.this,ListsScreenUtility.class);
+            intent.putExtra("table","lists");
+            startActivity(intent);
+        }else if (item.getName().equalsIgnoreCase("My Stores")){
+            intent = new Intent(OpeningScreen.this,ItemsScreenUtility.StoresScreenUtility.class);
+            intent.putExtra("table","stores");
+            startActivity(intent);
+        }else if (item.getName().equalsIgnoreCase("Settings")){
 
+        }else{
+
+        }
         // Highlight the selected item, update the title, and close the drawer
         drawerListView.setItemChecked(position, true);
         setTitle("Replace Me");

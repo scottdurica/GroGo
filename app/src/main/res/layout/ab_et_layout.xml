@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/et_ab_add_item"
+    android:layout_weight="1"
+    android:hint="Add item to list...               "
+    style="@style/et_custom_line_color_white"
+    android:textColorHint="#ffffff"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:singleLine="true"
+    android:imeOptions="actionDone"
+    android:inputType="textCapWords"/>

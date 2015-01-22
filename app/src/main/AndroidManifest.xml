@@ -16,12 +16,43 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ListScreen"
             android:label="@string/title_activity_list_screen"
             android:parentActivityName=".OpeningScreen"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".manipulationscreens.ItemsScreenUtility"
+            android:label="@string/title_activity_items_screen"
+            android:parentActivityName=".OpeningScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="emroxriprap.com.grogo.OpeningScreen" />
+        </activity>
+        <activity
+            android:name=".manipulationscreens.MealsScreenUtility"
+            android:label="@string/title_activity_meals_screen"
+            android:parentActivityName=".OpeningScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="emroxriprap.com.grogo.OpeningScreen" />
+        </activity>
+        <activity
+            android:name=".manipulationscreens.ListsScreenUtility"
+            android:label="@string/title_activity_lists_screen"
+            android:parentActivityName=".OpeningScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="emroxriprap.com.grogo.OpeningScreen" />
+        </activity>
+        <activity
+            android:name=".manipulationscreens.ItemsScreenUtility$StoresScreenUtility"
+            android:label="@string/title_activity_stores_screen"
+            android:parentActivityName=".OpeningScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="emroxriprap.com.grogo.OpeningScreen" />
         </activity>
     </application>
 

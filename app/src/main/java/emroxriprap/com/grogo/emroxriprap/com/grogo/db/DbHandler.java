@@ -6,13 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import emroxriprap.com.grogo.GroceryList;
-import emroxriprap.com.grogo.Item;
+import emroxriprap.com.grogo.models.GroceryList;
+import emroxriprap.com.grogo.models.Item;
 
 /**
  * Created by administrator on 1/14/15.

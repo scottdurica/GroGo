@@ -1,4 +1,4 @@
-package emroxriprap.com.grogo;
+package emroxriprap.com.grogo.models;
 
 /**
  * Created by Scott Durica on 1/11/2015.
