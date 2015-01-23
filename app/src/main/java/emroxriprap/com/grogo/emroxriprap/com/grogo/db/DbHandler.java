@@ -108,7 +108,23 @@ Log.e("String is ", CREATE_SHOPPING_LISTS_ITEMS_TABLE);
         }
         return false;
     }
+    public List<Item> getAllItems(){
+        List<Item>list = new ArrayList<Item>();
+        String query = "Select * from " + TABLE_ITEMS + "";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()){
+            do {
+                Item item = new Item();
+                item.setId((Integer.parseInt(cursor.getString(0))));
+                item.setName(cursor.getString(1));
+//                gl.setItemCount(Integer.parseInt(cursor.getString(2)));
 
+                list.add(item);
+            }while(cursor.moveToNext());
+        }
+        return list;
+    }
     public List<GroceryList> getAllLists(){
         List<GroceryList>list = new ArrayList<GroceryList>();
         String query = "Select * from " + TABLE_SHOPPING_LISTS + "";
